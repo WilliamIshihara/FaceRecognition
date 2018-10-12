@@ -1,17 +1,30 @@
+import java.io.File;
+
+import javax.media.Player;
+
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 //主界面
 public class Main extends Application{
-
+	//放置头像的按钮，以便系统调用
+	private Button head = new Button();
+	
+	
+	private TextField name = new TextField();
+	private TextField sex = new TextField();
+	private TextField old = new TextField();
 	public static void main(String[] args) {
 		launch(args);
 	}
@@ -80,20 +93,51 @@ public class Main extends Application{
 		ImageView imgView1 = new ImageView(img1);
 		
 		//注册布局
-		VBox minPane = new VBox();
+		VBox minPane = new VBox(30);
 		//头像
-		Button head = new Button();
+		
 		head.setStyle("-fx-background-image:url(file:F:/JavaProject/facePicture/加号_看图王.jpg)");
 		head.setMinSize(70, 70);
+		
 		//姓名，性别，年龄
+		Text text1 = new Text(20, 40, "姓名");
+		name.setEditable(true);//可编辑
+		HBox hbox1 = new HBox();
+		hbox1.getChildren().add(text1);
+		hbox1.getChildren().add(name);
+		
+		Text text2 = new Text(20, 40, "性别");
+		name.setEditable(true);//可编辑
+		HBox hbox2 = new HBox();
+		hbox2.getChildren().add(text2);
+		hbox2.getChildren().add(sex);
+		
+		Text text3 = new Text(20, 40, "年龄");
+		name.setEditable(true);//可编辑
+		HBox hbox3 = new HBox();
+		hbox3.getChildren().add(text3);
+		hbox3.getChildren().add(old);
+		
+		//提交按钮，自动打开摄像头
+
+		Image img4 = new Image("file:F:/JavaProject/facePicture/提交.PNG");
+		ImageView imgView4 =new ImageView(img4);
+		Button submit = new Button("",imgView4);
+		submit.setMinSize(160, 30);
+		submit.setStyle("-fx-background-color:ANTIQUEWHITE");
+		
 		
 		minPane.getChildren().add(head);
+		minPane.getChildren().add(hbox1);
+		minPane.getChildren().add(hbox2);
+		minPane.getChildren().add(hbox3);
+		minPane.getChildren().add(submit);
 		
-		
+		minPane.setAlignment(Pos.CENTER);
 		//左侧放注册界面
 		borderPane.setTop(imgView1);
 		borderPane.setLeft(minPane);
-		
+		BorderPane.setAlignment(minPane, Pos.CENTER);
 		
 		Scene scene = new Scene(borderPane);
 		stage.setScene(scene);
@@ -107,8 +151,50 @@ public class Main extends Application{
 		//点击按钮出现一个文件选择器，选择图片
 		//暂时的图片我们帮助选择好，大小剪切好，或者可以调api，自己查
 		head.setOnAction(e->{
-			
+			FileChooser fileChooser = new FileChooser();
+			fileChooser.setTitle("choose your head portrait");
+			fileChooser.setInitialDirectory(new File("F:\\JavaProject\\facePicture\\头像"));
+	        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("All Images", "*.*");
+	        fileChooser.getExtensionFilters().add(extFilter);
+	        File file = fileChooser.showOpenDialog(stage);
+	        //异常处理，如果未选择图片就提示选择图片
+	        if(file!=null) {
+	        System.out.println(file.toString());
+	        //将这个file存到text文件中
+	        String headPicture = new String(file.toString());
+	        headPicture = "file:F:/JavaProject/facePicture/加号_看图王.jpg";
+	        head.setStyle("-fx-background-image:url(file:F:/JavaProject/facePicture/头像/头像.jpg)");
+	        }
+	        else
+	        	System.out.println("请选择头像");
 		});
+		//当有的空是空的时候不跳转，控制台显示让他们输入正确的信息
+		//不为空的时候，打开摄像头，拍摄照片，并将信息保存到文件中存储。
+		submit.setOnAction(e->{
+			//
+			//
+			//*****************************************************************************
+			//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+			//
+			//当textField不输入的时候，返回值为""，但是在判定的时候不能用==，因为这个比较的是地址，应该用equals来比较
+			if(!name.getText().equals("")&&!sex.getText().equals("")&&!old.getText().equals("") ) {
+				System.out.println(name.getText());
+				System.out.println(sex.getText());
+				System.out.println(old.getText());
+				getCamera();
+			}
+			else
+				System.out.println("请完善数据");
+		});
+		
+	}
+	
+	//获取照相机，拍摄人脸并将其保存（以及上边的输入的数据）
+	public void getCamera() {
+		//利用这三个类分别获取摄像头驱动，和获取摄像头内的图像流，获取到的图像流是一个swing的component组件类
+		//public static Player = null; 
+		
+		
 		
 	}
 
