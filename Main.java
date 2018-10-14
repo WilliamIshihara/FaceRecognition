@@ -1,4 +1,7 @@
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 
 import javax.media.Player;
 
@@ -75,7 +78,25 @@ public class Main extends Application{
 		
 		//------button 响应
 		startOfFirst.setOnAction(e->LogOn(arg0));
+		//登陆界面
+		start.setOnAction(e->LogIn(arg0));
 	}
+	//登陆界面
+	public void LogIn(Stage oldStage) {
+		//直接显示摄像头，根据识别情况判断你是哪一位，判断完成之后，显示，欢迎xxx
+		//或者登陆失败，请先注册，
+		//你已经变得太丑了，我都认不出你了
+		//整容毁容长胖变瘦未注册的请先注册或者重新注册，我不认识你或者我现在已经不认识你了。
+		//然后进入主界面
+		
+	}
+	
+	//主界面
+	public void mainScene() {
+		Stage mainStage = new Stage();
+		
+	}
+	
 	
 	//注册界面
 	
@@ -181,21 +202,48 @@ public class Main extends Application{
 				System.out.println(name.getText());
 				System.out.println(sex.getText());
 				System.out.println(old.getText());
-				getCamera();
+				getCamera(stage);
 			}
 			else
 				System.out.println("请完善数据");
 		});
 		
+		
+		
 	}
 	
 	//获取照相机，拍摄人脸并将其保存（以及上边的输入的数据）
-	public void getCamera() {
+	public void getCamera(Stage stage) {
 		//利用这三个类分别获取摄像头驱动，和获取摄像头内的图像流，获取到的图像流是一个swing的component组件类
 		//public static Player = null; 
-		
-		
-		
+		//获取头像，然后保存到文件里
+		ShowVedio showVedio = new ShowVedio();
+		showVedio.Start();
+		//private TextField name = new TextField();
+		//private TextField sex = new TextField();
+		//private TextField old = new TextField();
+		String fileName = "F:\\JavaProject\\facePicture\\data\\"+name.getText()+".txt";
+	        try {
+	            File file1 = new File(fileName);
+	           
+	            PrintStream ps = new PrintStream(new FileOutputStream(file1));
+	            ps.print(name.getText()+",");// 往文件里写入字符串
+	            ps.append(sex.getText()+",");// 在已有的基础上添加字符串
+	            ps.append(old.getText());// 在已有的基础上添加字符串
+	        } catch (FileNotFoundException e) {
+	            // TODO Auto-generated catch block
+	            e.printStackTrace();
+	        }
+	        try {
+				start(stage);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	}
 
+	
+	
+	
+	
 }
